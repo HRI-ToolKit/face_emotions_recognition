@@ -1,3 +1,0 @@
-[console_scripts]
-emt_rec_node = emotions_recognition.emt_rec_node:main
-
