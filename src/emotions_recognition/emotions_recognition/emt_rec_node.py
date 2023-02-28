@@ -3,7 +3,7 @@ import json
 import math
 from rclpy.node import Node
 from std_msgs.msg import String
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image,CompressedImage
 from cv_bridge import CvBridge
 
 import tensorflow as tf
@@ -162,14 +162,17 @@ class Emt_rec_node(Node):
     def __init__(self,name) -> None:
         super().__init__(name)
         self.image_publisher_ = self.create_publisher(Image, "/facial_emotion_recognition/image", 10)
+        self.image_compressed_publisher_ = self.create_publisher(CompressedImage, "/facial_emotion_recognition/image/compressed", 10)
         self.image_subscriber_ = self.create_subscription(Image, "/image_raw", self.imageCallback, 10)
         self.image_subscriber_
         self.emotion_string_publisher_ = self.create_publisher(String, "/facial_emotion_recognition/emotion", 10)
 
-    def imageCallback(self,data):
-        frame = CvBridge().imgmsg_to_cv2(data, desired_encoding="rgb8")
+    def imageCallback(self,data:Image):
+        print(data.encoding)
+        frame = CvBridge().imgmsg_to_cv2(data, desired_encoding=data.encoding)
         img,emo_str = inference(frame)
-        self.image_publisher_.publish(CvBridge().cv2_to_imgmsg(img, "rgb8"))
+        self.image_compressed_publisher_.publish(CvBridge().cv2_to_compressed_imgmsg(img, "jpeg"))
+        self.image_publisher_.publish(CvBridge().cv2_to_imgmsg(img, data.encoding))
         msg = String()
         msg.data = str(emo_str)
         self.emotion_string_publisher_.publish(msg)
