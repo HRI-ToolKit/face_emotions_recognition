@@ -80,6 +80,20 @@
         "expectedRate": 0
       },
       {
+        "name": "emotion_recognition_image_compressed",
+        "type": "",
+        "description": "",
+        "streamMode": "STREAM_MODE_TOPIC",
+        "rosTopic": {
+          "topic": "/facial_emotion_recognition/image/compressed",
+          "type": "sensor_msgs.CompressedImage",
+          "qosProfile": ""
+        },
+        "latched": false,
+        "maxRate": 0,
+        "expectedRate": 0
+      },
+      {
         "name": "emotion",
         "type": "",
         "description": "",
